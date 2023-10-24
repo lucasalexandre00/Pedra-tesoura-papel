@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putString(Constantes.KEY_JOGADOR_1, player1);
         args.putString(Constantes.KEY_JOGADOR_2, player2);
-        args.putString(Constantes.KEY_RODADAS, batalhas);
-        intent.putExtra(args);
+        args.putInt(Constantes.KEY_RODADAS, batalhas);
+        intent.putExtras(args);
         startActivity(intent);
     }
 }

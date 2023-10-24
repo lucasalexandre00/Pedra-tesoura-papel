@@ -2,6 +2,7 @@ package br.edu.ifsp.dmo.pedratesourapapel;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -125,9 +126,25 @@ public class ConfrontoActivity extends AppCompatActivity {
     }
 
     private void setClickListener() {
+        coisa1Button.setOnClickListener(view -> abrirSelecao(1));
+        coisa2Button.setOnClickListener(view -> abrirSelecao(2));
+        lutarButton.setOnClickListener(view -> executarConfronto());
+        fecharButton.setOnClickListener(view -> finish());
     }
 
     private void updateUI() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            String title = confronto.getJogador1().getNome() + " x " + confronto.getJogador2().getNome();
+            actionBar.setTitle(title);
+        }
+
+        labelP1TextView.setText((confronto.getJogador1().getNome()));
+        labelP2TextView.setText(confronto.getJogador2().getNome());
+        atualizarPlacar();
+
+        coisa1Button.setText(confronto.getJogador1().getNome() + getString((R.string.gum_selection)));
+        coisa2Button.setText(confronto.getJogador2().getNome() + getString(R.string.gum_selection));
     }
 
     private void findById() {

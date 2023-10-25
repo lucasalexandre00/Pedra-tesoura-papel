@@ -31,7 +31,7 @@ public class ConfrontoActivity extends AppCompatActivity {
     private TextView resultadoP1TextView;
     private TextView resultadoP2TextView;
     private TextView anuncioTextView;
-
+    private String modoJogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,7 @@ public class ConfrontoActivity extends AppCompatActivity {
         if (intent != null){
             Bundle args = intent.getExtras();
             if (args != null){
+                modoJogo = args.getString(Constantes.KEY_MODO_JOGO);
                 String n1 = args.getString(Constantes.KEY_JOGADOR_1);
                 String n2 = args.getString(Constantes.KEY_JOGADOR_2);
                 int nro = args.getInt(Constantes.KEY_RODADAS);
@@ -62,7 +63,10 @@ public class ConfrontoActivity extends AppCompatActivity {
                         Intent intentResultado = result.getData();
                         int jogador = intentResultado.getIntExtra(Constantes.KEY_NRO_JOGADOR, 0);
                         Coisa coisa = (Coisa) intentResultado.getSerializableExtra(Constantes.KEY_COISA);
-                        if (jogador == 1){
+                        if(jogador == 1 && (intentResultado.getSerializableExtra("computer_result") != null)) {
+                            coisaPlayer1 = coisa;
+                            coisaPlayer2 = (Coisa) intentResultado.getSerializableExtra("computer_result");
+                        } else if(jogador == 1){
                             coisaPlayer1 = coisa;
                         }
                         if (jogador == 2){
@@ -76,11 +80,17 @@ public class ConfrontoActivity extends AppCompatActivity {
     private void abrirSelecao(int i){
         Intent intent = new Intent(this, SelecaoActivity.class);
         intent.putExtra(Constantes.KEY_NRO_JOGADOR, i);
-        if (i == 1){
+        intent.putExtra(Constantes.KEY_MODO_JOGO, modoJogo);
+        if (modoJogo.equals("singlePlayer")){
             intent.putExtra(Constantes.KEY_NOME, confronto.getJogador1().getNome());
         }else {
-            intent.putExtra(Constantes.KEY_NOME, confronto.getJogador2().getNome());
+            if (i == 1){
+                intent.putExtra(Constantes.KEY_NOME, confronto.getJogador1().getNome());
+            }else {
+                intent.putExtra(Constantes.KEY_NOME, confronto.getJogador2().getNome());
+            }
         }
+
         resultLauncher.launch(intent);
     }
 
@@ -133,6 +143,9 @@ public class ConfrontoActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
+        if (modoJogo.equals("singlePlayer")){
+            coisa2Button.setVisibility(View.INVISIBLE);
+        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
             String title = confronto.getJogador1().getNome() + " x " + confronto.getJogador2().getNome();
